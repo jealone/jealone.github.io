@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Jealone]]></title>
-  <link href="http://jealone.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Life | Jealone]]></title>
+  <link href="http://jealone.github.io/blog/categories/life/atom.xml" rel="self"/>
   <link href="http://jealone.github.io/"/>
   <updated>2014-06-23T23:37:59+08:00</updated>
   <id>http://jealone.github.io/</id>
