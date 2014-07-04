@@ -4,7 +4,7 @@
   <title><![CDATA[Jealone]]></title>
   <link href="http://jealone.github.io/atom.xml" rel="self"/>
   <link href="http://jealone.github.io/"/>
-  <updated>2014-07-04T19:01:07+08:00</updated>
+  <updated>2014-07-04T19:03:12+08:00</updated>
   <id>http://jealone.github.io/</id>
   <author>
     <name><![CDATA[Arthur Guo]]></name>
@@ -18,17 +18,17 @@
     <link href="http://jealone.github.io/blog/2014/06/23/my-first-blog/"/>
     <updated>2014-06-23T19:02:45+08:00</updated>
     <id>http://jealone.github.io/blog/2014/06/23/my-first-blog</id>
-    <content type="html"><![CDATA[<h1>为什么开始写博客</h1>
+    <content type="html"><![CDATA[<h2>为什么开始写博客</h2>
 
 <p>之前看过<a href="http://en.wikipedia.org/wiki/Steve_Yegge" title="维基百科"><em>Steve Yegge</em></a>的博客，总觉得自己荒废这么多年的写作什么时候也应该重新拾掇起来，毕竟学习这么多年为的不仅仅仅仅是那800字的东西。</p>
 
 <p>机缘是有一天看到某位学长的<a href="http://zh.lucida.me/blog/on-learning-algorithms/" title="算法学习之路"><em>算法学习之路</em></a>的博文,在大呼相见恨晚后，我还额外知道了<a href="http://octopress.org" title="Octopress"><em>Octopress</em></a>以及<a href="https://github.com" title="github"><em>github</em></a>能托管静态页面，自己捣鼓了一个下午，终于才有了我自己的博客</p>
 
-<h1>幸运的2014年</h1>
+<h2>幸运的2014年</h2>
 
 <p>其实我一直觉得今年是我的幸运年，各种侥幸突围，终于，生活还是走上了自己一直期望的方向，怀着感恩的心感谢陪伴我的人，感谢那些相信我的人！现在的我要重新起航，做一个Too Young Too Naive的Geek！</p>
 
-<h1>准备写什么</h1>
+<h2>准备写什么</h2>
 
 <ul>
 <li>Think of Tech</li>
