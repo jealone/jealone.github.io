@@ -3,9 +3,9 @@
 # ----------------------- #
 
 url: http://jealone.github.io
-title: Jealone's Blog
-subtitle: My Tech Life.
-author: Arthur
+title: Jealone
+subtitle: Think of Tech, Taste of Life.
+author: Arthur Guo
 simple_search: https://www.google.com/search
 description:
 
@@ -71,7 +71,7 @@ github_skip_forks: true
 
 # Twitter
 twitter_user:
-twitter_tweet_button: true
+twitter_tweet_button: false
 
 # Google +1
 google_plus_one: false
