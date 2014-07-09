@@ -1,0 +1,81 @@
+---
+layout: post
+title: "PHP 关于 call_user_func_array() 函数"
+date: 2014-07-08 18:43:21 +0800
+comments: true
+categories: PHP Programming
+---
+##今天踩的一个PHP的坑
+
+其实也怪自己没有仔细阅读文档，话说最近在公司迁一个后台管理系统到另外一个后台，原始的后台代码写的及其混乱，貌似是很多人合写最后堆在一起的，乱到什么程度呢，就是说某一项功能或许有多种实现，而且后台会产生很多脏数据，没有回滚机制，最开始接手的时候，本着精益求精的追求，每一个功能实现不好的地方，我会自己重新设计实现，但是越到后来发现越坑，连带前端代码都要我重写，后来自己的想法是赶紧写完交差，再也不要碰这系统了！
+经过1个多周的奋战，就快完结的时候遇到了[`call_user_func_array()`][1]这个函数。
+
+
+	mixed call_user_func_array(callable $callback, array $param_arr)
+	
+
+参数
+
+- callback 被调用的回调函数。
+
+- param_arr 要被传入回调函数的数组，这个数组得是索引数组。
+
+返回值
+
+- 返回回调函数的结果。如果出错的话就返回FALSE
+
+注释
+
+- PHP 5.4之前，如果param_arr里面的参数是引用传值，那么不管原函数默认的各个参数是不是引用传值，都会以引用方式传入到回调函数。虽然以引用传值这种方式来传递参数给回调函数，不会发出不支持的警告，但是不管怎么说，这样做还是不被支持的。并且在PHP 5.4里面被去掉了。而且，这也不适用于内部函数。如果回调函数默认设置需要接受的参数是引用传递的时候，按值传递，结果将会输出一个警告。
+
+函数用法
+
+- If you need to call just function with parameters:
+
+`call_user_func_array('Foo', $args);`
+
+- If you need to call CLASS method (NOT object, 静态方法):
+
+`call_user_func_array(array('class', 'Foo'), $args);` 
+
+- If you need to call OBJECT method:
+
+`call_user_func_array(array(&$Object, 'Foo'), $args);`
+
+- If you need to call method of object of object:
+
+`call_user_func_array(array(&$Object->Object, 'Foo'), $args);`
+
+- If you need to call object method from within the very same object (NOT CLASS!):
+
+`call_user_func_array(array(&$this, 'Foo'),args);`
+
+其实上面的应用都没有问题，但是注释里面的内容值得仔细研读，就是关于参数传值的问题。PHP默认是按值传递，但是我们也可以通过`&`让参数传递引用，如果我们的回调函数要接受的参数是引用怎么办？
+
+`call_user_func_array(array(&$obj,$method), array(&$arg1, $arg2, $arg3));`
+
+这样才能正确传递参数，函数才能正常调用。
+
+- *当然，例子中的对象不用加`&`，因为PHP中对象默认是按引用传递*
+
+	
+举个简单的例子就是：
+
+	class Person {
+		private _instance;
+		public __construction() {
+			//通过静态方法获取实例
+			$this->_instance = Behaviour::getInstance();
+		}
+		public __call($func, $args) {
+			return call_user_func_array(array($this->_instance, $func), $args);
+		}
+	}
+	
+利用这个设计主实现匿名函数，可以隐藏方法类的细节,我们通过Person对象来调用Data类中的方法时，就好像调用Person自己的方法。利用这个设计就可以实现类似Scala中的特质(好比带属性和具体方法的接口),对一个类可以任意扩展，比如这个Person类我们可以建立很多人的动作类，只有通过Person才能调用动作方法，因为动作方法是私有类(构造函数私有)。还可以通过`__call()`函数中读取配置，根据函数名取得不同实例，实现对类的扩展，很像_C++_中的多重继承，不过得自己控制扩展的过程。
+
+好了，讲到今天遇到情况，就是例子中的设计，通过`__call($func, $args)`,取得的`$args`，然后通过`call_user_func_array()`函数，将`$args`传递给回调函数，然而，我的回调函数的参数有一个默认是按引用传递，但我却把值直接传了过去，结果直接导致回调函数一直没法调用。
+
+虽然是很简单的原理，在[_PHP手册_][1]中也写了出来，但是却是特别容易忽略的地方。
+
+[1]:http://www.php.net/manual/zh/function.call-user-func-array.php "PHP手册"
