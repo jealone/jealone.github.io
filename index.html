@@ -9,7 +9,7 @@
   <meta name="author" content="Arthur Guo">
 
   
-  <meta name="description" content="为什么开始写博客 之前看过Steve Yegge的博客，总觉得自己荒废这么多年的写作什么时候也应该重新拾掇起来，毕竟学习这么多年为的不仅仅仅仅是那800字的东西。 机缘是有一天看到某位学长的算法学习之路的博文,在大呼相见恨晚后，我还额外知道了Octopress以及github能托管静态页面， &hellip;">
+  <meta name="description" content="今天踩的一个PHP的坑 其实也怪自己没有仔细阅读文档，话说最近在公司迁一个后台管理系统到另外一个后台，原始的后台代码写的及其混乱，貌似是很多人合写最后堆在一起的，乱到什么程度呢，就是说某一项功能或许有多种实现，而且后台会产生很多脏数据，没有回滚机制，最开始接手的时候，本着精益求精的追求， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,138 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/08/php-guan-yu-call-user-func-array-han-shu/">PHP 关于 Call_user_func_array() 函数</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-08T18:43:21+08:00" pubdate data-updated="true">Jul 8<sup>th</sup>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>今天踩的一个PHP的坑</h2>
+
+<p>其实也怪自己没有仔细阅读文档，话说最近在公司迁一个后台管理系统到另外一个后台，原始的后台代码写的及其混乱，貌似是很多人合写最后堆在一起的，乱到什么程度呢，就是说某一项功能或许有多种实现，而且后台会产生很多脏数据，没有回滚机制，最开始接手的时候，本着精益求精的追求，每一个功能实现不好的地方，我会自己重新设计实现，但是越到后来发现越坑，连带前端代码都要我重写，后来自己的想法是赶紧写完交差，再也不要碰这系统了！
+经过1个多周的奋战，就快完结的时候遇到了<a href="http://www.php.net/manual/zh/function.call-user-func-array.php" title="PHP手册"><code>call_user_func_array()</code></a>这个函数。</p>
+
+<pre><code>mixed call_user_func_array(callable $callback, array $param_arr)
+</code></pre>
+
+<p>参数</p>
+
+<ul>
+<li><p>callback 被调用的回调函数。</p></li>
+<li><p>param_arr 要被传入回调函数的数组，这个数组得是索引数组。</p></li>
+</ul>
+
+
+<p>返回值</p>
+
+<ul>
+<li>返回回调函数的结果。如果出错的话就返回FALSE</li>
+</ul>
+
+
+<p>注释</p>
+
+<ul>
+<li>PHP 5.4之前，如果param_arr里面的参数是引用传值，那么不管原函数默认的各个参数是不是引用传值，都会以引用方式传入到回调函数。虽然以引用传值这种方式来传递参数给回调函数，不会发出不支持的警告，但是不管怎么说，这样做还是不被支持的。并且在PHP 5.4里面被去掉了。而且，这也不适用于内部函数。如果回调函数默认设置需要接受的参数是引用传递的时候，按值传递，结果将会输出一个警告。</li>
+</ul>
+
+
+<p>函数用法</p>
+
+<ul>
+<li>If you need to call just function with parameters:</li>
+</ul>
+
+
+<p><code>call_user_func_array('Foo', $args);</code></p>
+
+<ul>
+<li>If you need to call CLASS method (NOT object, 静态方法):</li>
+</ul>
+
+
+<p><code>call_user_func_array(array('class', 'Foo'), $args);</code></p>
+
+<ul>
+<li>If you need to call OBJECT method:</li>
+</ul>
+
+
+<p><code>call_user_func_array(array(&amp;$Object, 'Foo'), $args);</code></p>
+
+<ul>
+<li>If you need to call method of object of object:</li>
+</ul>
+
+
+<p><code>call_user_func_array(array(&amp;$Object-&gt;Object, 'Foo'), $args);</code></p>
+
+<ul>
+<li>If you need to call object method from within the very same object (NOT CLASS!):</li>
+</ul>
+
+
+<p><code>call_user_func_array(array(&amp;$this, 'Foo'),args);</code></p>
+
+<p>其实上面的应用都没有问题，但是注释里面的内容值得仔细研读，就是关于参数传值的问题。PHP默认是按值传递，但是我们也可以通过<code>&amp;</code>让参数传递引用，如果我们的回调函数要接受的参数是引用怎么办？</p>
+
+<p><code>call_user_func_array(array(&amp;$obj,$method), array(&amp;$arg1, $arg2, $arg3));</code></p>
+
+<p>这样才能正确传递参数，函数才能正常调用。</p>
+
+<ul>
+<li><em>当然，例子中的对象不用加<code>&amp;</code>，因为PHP中对象默认是按引用传递</em></li>
+</ul>
+
+
+<p>举个简单的例子就是：</p>
+
+<pre><code>class Person {
+    private _instance;
+    public __construction() {
+        //通过静态方法获取实例
+        $this-&gt;_instance = Behaviour::getInstance();
+    }
+    public __call($func, $args) {
+        return call_user_func_array(array($this-&gt;_instance, $func), $args);
+    }
+}
+</code></pre>
+
+<p>利用这个设计主实现匿名函数，可以隐藏方法类的细节,我们通过Person对象来调用Data类中的方法时，就好像调用Person自己的方法。利用这个设计就可以实现类似Scala中的特质(好比带属性和具体方法的接口),对一个类可以任意扩展，比如这个Person类我们可以建立很多人的动作类，只有通过Person才能调用动作方法，因为动作方法是私有类(构造函数私有)。还可以通过<code>__call()</code>函数中读取配置，根据函数名取得不同实例，实现对类的扩展，很像<em>C++</em>中的多重继承，不过得自己控制扩展的过程。</p>
+
+<p>好了，讲到今天遇到情况，就是例子中的设计，通过<code>__call($func, $args)</code>,取得的<code>$args</code>，然后通过<code>call_user_func_array()</code>函数，将<code>$args</code>传递给回调函数，然而，我的回调函数的参数有一个默认是按引用传递，但我却把值直接传了过去，结果直接导致回调函数一直没法调用。</p>
+
+<p>虽然是很简单的原理，在<a href="http://www.php.net/manual/zh/function.call-user-func-array.php" title="PHP手册"><em>PHP手册</em></a>中也写了出来，但是却是特别容易忽略的地方。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -131,6 +263,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/07/08/php-guan-yu-call-user-func-array-han-shu/">PHP 关于 Call_user_func_array() 函数</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/06/23/my-first-blog/">第一篇博文</a>

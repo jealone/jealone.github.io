@@ -3,6 +3,12 @@
   
   
   <url>
+    <loc>http://jealone.github.io/blog/2014/07/08/php-guan-yu-call-user-func-array-han-shu/</loc>
+    <lastmod>2014-07-08T18:43:21+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://jealone.github.io/blog/2014/06/23/my-first-blog/</loc>
     <lastmod>2014-06-23T19:02:45+08:00</lastmod>
     <priority>0.8</priority>
@@ -11,21 +17,21 @@
   
   <url>
     <loc>http://jealone.github.io/blog/archives/</loc>
-    <lastmod>2014-07-04T19:03:12+08:00</lastmod>
+    <lastmod>2014-07-09T10:16:17+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://jealone.github.io/</loc>
-    <lastmod>2014-07-04T19:03:12+08:00</lastmod>
+    <lastmod>2014-07-09T10:16:17+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <url>
     <loc>http://jealone.github.io/about/</loc>
-    <lastmod>2014-07-04T19:03:12+08:00</lastmod>
+    <lastmod>2014-07-09T10:16:17+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
