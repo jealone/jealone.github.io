@@ -97,8 +97,10 @@
 <p>其实也怪自己没有仔细阅读文档，话说最近在公司迁一个后台管理系统到另外一个后台，原始的后台代码写的及其混乱，貌似是很多人合写最后堆在一起的，乱到什么程度呢，就是说某一项功能或许有多种实现，而且后台会产生很多脏数据，没有回滚机制，最开始接手的时候，本着精益求精的追求，每一个功能实现不好的地方，我会自己重新设计实现，但是越到后来发现越坑，连带前端代码都要我重写，后来自己的想法是赶紧写完交差，再也不要碰这系统了！
 经过1个多周的奋战，就快完结的时候遇到了<a href="http://www.php.net/manual/zh/function.call-user-func-array.php" title="PHP手册"><code>call_user_func_array()</code></a>这个函数。</p>
 
-<pre><code>mixed call_user_func_array(callable $callback, array $param_arr)
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">mixed</span> <span class="nb">call_user_func_array</span><span class="p">(</span><span class="nx">callable</span> <span class="nv">$callback</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$param_arr</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>参数</p>
 
@@ -124,44 +126,43 @@
 
 <p>函数用法</p>
 
-<ul>
-<li>If you need to call just function with parameters:</li>
-</ul>
+<figure class='code'><figcaption><span>call_user_func_array() 函数用法实例</span><a href='http://www.php.net/manual/zh/function.call-user-func-array.php#49232'>Source</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="c1">//If you need to call just function with parameters:</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="s1">&#39;Foo&#39;</span><span class="p">,</span> <span class="nv">$args</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// If you need to call CLASS method (NOT object, 静态方法):</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;Foo&#39;</span><span class="p">),</span> <span class="nv">$args</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// If you need to call OBJECT method:</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$Object</span><span class="p">,</span> <span class="s1">&#39;Foo&#39;</span><span class="p">),</span> <span class="nv">$args</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// If you need to call method of object of object:</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$Object</span><span class="o">-&gt;</span><span class="na">Object</span><span class="p">,</span> <span class="s1">&#39;Foo&#39;</span><span class="p">),</span> <span class="nv">$args</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// If you need to call object method from within the very same object (NOT CLASS!):</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">&#39;Foo&#39;</span><span class="p">),</span><span class="nx">args</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
-
-<p><code>call_user_func_array('Foo', $args);</code></p>
-
-<ul>
-<li>If you need to call CLASS method (NOT object, 静态方法):</li>
-</ul>
-
-
-<p><code>call_user_func_array(array('class', 'Foo'), $args);</code></p>
-
-<ul>
-<li>If you need to call OBJECT method:</li>
-</ul>
-
-
-<p><code>call_user_func_array(array(&amp;$Object, 'Foo'), $args);</code></p>
-
-<ul>
-<li>If you need to call method of object of object:</li>
-</ul>
-
-
-<p><code>call_user_func_array(array(&amp;$Object-&gt;Object, 'Foo'), $args);</code></p>
-
-<ul>
-<li>If you need to call object method from within the very same object (NOT CLASS!):</li>
-</ul>
-
-
-<p><code>call_user_func_array(array(&amp;$this, 'Foo'),args);</code></p>
 
 <p>其实上面的应用都没有问题，但是注释里面的内容值得仔细研读，就是关于参数传值的问题。PHP默认是按值传递，但是我们也可以通过<code>&amp;</code>让参数传递引用，如果我们的回调函数要接受的参数是引用怎么办？</p>
 
-<p><code>call_user_func_array(array(&amp;$obj,$method), array(&amp;$arg1, $arg2, $arg3));</code></p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$obj</span><span class="p">,</span><span class="nv">$method</span><span class="p">),</span> <span class="k">array</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$arg1</span><span class="p">,</span> <span class="nv">$arg2</span><span class="p">,</span> <span class="nv">$arg3</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>这样才能正确传递参数，函数才能正常调用。</p>
 
@@ -172,17 +173,28 @@
 
 <p>举个简单的例子就是：</p>
 
-<pre><code>class Person {
-    private _instance;
-    public __construction() {
-        //通过静态方法获取实例
-        $this-&gt;_instance = Behaviour::getInstance();
-    }
-    public __call($func, $args) {
-        return call_user_func_array(array($this-&gt;_instance, $func), $args);
-    }
-}
-</code></pre>
+<figure class='code'><figcaption><span>Person.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">private</span> <span class="nx">_instance</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">public</span> <span class="nx">__construction</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">//通过静态方法获取实例</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_instance</span> <span class="o">=</span> <span class="nx">Behaviour</span><span class="o">::</span><span class="na">getInstance</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">public</span> <span class="nx">__call</span><span class="p">(</span><span class="nv">$func</span><span class="p">,</span> <span class="nv">$args</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">call_user_func_array</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_instance</span><span class="p">,</span> <span class="nv">$func</span><span class="p">),</span> <span class="nv">$args</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>利用这个设计主实现匿名函数，可以隐藏方法类的细节,我们通过Person对象来调用Data类中的方法时，就好像调用Person自己的方法。利用这个设计就可以实现类似Scala中的特质(好比带属性和具体方法的接口),对一个类可以任意扩展，比如这个Person类我们可以建立很多人的动作类，只有通过Person才能调用动作方法，因为动作方法是私有类(构造函数私有)。还可以通过<code>__call()</code>函数中读取配置，根据函数名取得不同实例，实现对类的扩展，很像<em>C++</em>中的多重继承，不过得自己控制扩展的过程。</p>
 
